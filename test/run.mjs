@@ -2,9 +2,10 @@
 //   node test/run.mjs https://github.com/owner/repo          (connections only)
 //   node test/run.mjs https://github.com/owner/repo --ai     (with Gemma, Ollama must be running)
 //   node test/run.mjs https://github.com/owner/repo --ai --ask "how does login work?"
+//   node test/run.mjs https://github.com/owner/repo --ai --deep src/app.py   (detailed tour of one file)
 
 import { writeFileSync } from "node:fs";
-import { analyzeRepo, askHowItWorks } from "../lib/analyze.js";
+import { analyzeRepo, askHowItWorks, explainFileInDepth } from "../lib/analyze.js";
 
 const url = process.argv[2];
 const useAI = process.argv.includes("--ai");
@@ -16,9 +17,19 @@ if (!url) {
   process.exit(1);
 }
 
+const deepIdx = process.argv.indexOf("--deep");
+const deepFile = deepIdx > -1 ? process.argv[deepIdx + 1] : null;
+
 const t0 = Date.now();
-const graph = await analyzeRepo(url, { useAI, onProgress: (m) => process.stdout.write(`\r${m.padEnd(50)}`) });
-console.log(`\n\nDone in ${((Date.now() - t0) / 1000).toFixed(1)}s`);
+let mapAt = 0;
+const graph = await analyzeRepo(url, {
+  useAI,
+  onProgress: (m) => process.stdout.write(`\r${m.padEnd(50)}`),
+  onUpdate: () => {
+    if (!mapAt) mapAt = Date.now();
+  },
+});
+console.log(`\n\nMap ready in ${((mapAt - t0) / 1000).toFixed(1)}s, all summaries done in ${((Date.now() - t0) / 1000).toFixed(1)}s`);
 console.log(`Files mapped: ${graph.nodes.length} (of ${graph.repo.totalFiles} in repo)`);
 console.log(`Connections:  ${graph.edges.length}`);
 console.log(`Unconnected:  ${graph.nodes.filter((n) => !n.imports.length && !n.importedBy.length).length}`);
@@ -38,6 +49,17 @@ if (question && useAI) {
   const trace = await askHowItWorks(graph, question);
   console.log(`\nQ: ${question}\nA: ${trace.answer}`);
   trace.path.forEach((s, i) => console.log(`  ${i + 1}. ${s.file}: ${s.step}`));
+}
+
+if (deepFile && useAI) {
+  const t1 = Date.now();
+  const d = await explainFileInDepth(graph, deepFile);
+  console.log(`\nDeep dive: ${deepFile} (${((Date.now() - t1) / 1000).toFixed(1)}s)`);
+  console.log(`  Purpose: ${d.purpose}`);
+  for (const p of d.parts || []) console.log(`  - ${p.name}: ${p.what}`);
+  console.log(`  Connections: ${d.connections}`);
+  console.log(`  Careful: ${d.change_tips}`);
+  for (const t of d.terms || []) console.log(`  [${t.term}] ${t.meaning}`);
 }
 
 writeFileSync("graph.json", JSON.stringify(graph, null, 2));
