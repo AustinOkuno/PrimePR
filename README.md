@@ -6,7 +6,7 @@
 > Tracks: 📚 **Open Source Education** · 🤖 **Best Open-Source AI Project (Gemma 4)**
 
 <!-- TODO: add a screenshot or GIF of the side panel -->
-![NodeMap side panel](docs/screenshot.png)
+![NodeMap side panel](docs/Screenshot.png)
 
 ---
 
