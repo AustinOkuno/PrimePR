@@ -4,6 +4,7 @@
   "version": "0.1.0",
   "description": "A map of any GitHub repo, right in your side panel.",
   "permissions": ["sidePanel", "tabs", "storage"],
+    "host_permissions": ["https://api.github.com/*", "https://raw.githubusercontent.com/*", "http://localhost:11434/*"],
   "background": {
     "service_worker": "background.js"
   },

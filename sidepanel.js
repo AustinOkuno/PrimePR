@@ -1,4 +1,8 @@
 // Draws the repo map in the side panel.
+import { analyzeRepo, askHowItWorks, fileFromGithubUrl } from "./lib/analyze.js";
+
+let currentGraph = null; // the repo map being shown
+
 
 const ROLE_COLORS = {
   entry: "#e4572e",
@@ -12,13 +16,18 @@ const ROLE_COLORS = {
 
 // Turn the graph from getGraph() into Cytoscape's format
 function toElements(graph) {
+      // Box ids use the folder, which never changes; Gemma renames the label later
+  const hoodId = (h) => "hood:" + (h.folder || h.name);
+  const hoodOf = {};
+  for (const h of graph.neighborhoods) for (const f of h.files) hoodOf[f] = hoodId(h);
+
   const hoods = graph.neighborhoods.map((h) => ({
-    data: { id: "hood:" + h.name, label: h.name },
+    data: { id: hoodId(h), label: h.name },
   }));
   const files = graph.nodes.map((n) => ({
     data: {
       id: n.id,
-      parent: "hood:" + n.group,
+      parent: hoodOf[n.id],                           
       label: n.id.split("/").pop(),
       role: n.role,
       importance: n.importance,
@@ -41,7 +50,7 @@ function toElements(graph) {
 
 const cy = cytoscape({
   container: document.getElementById("map"),
-  elements: toElements(getGraph()),
+  elements: [],
   style: [
     { selector: "node", style: { label: "data(label)", "font-size": 8 } },
     {
@@ -89,14 +98,14 @@ const cy = cytoscape({
   layout: { name: "preset" },
 });
 
-requestAnimationFrame(() => cy.layout({ name: "cose", animate: false, padding: 10 }).run());
+
 window.addEventListener("resize", () => cy.resize().fit(undefined, 10));
 
 // Show a file's details when it's clicked
 const detailsEl = document.getElementById("details");
 
 cy.on("tap", "node[role]", (evt) => {
-  const file = getGraph().nodes.find((n) => n.id === evt.target.id());
+  const file = currentGraph.nodes.find((n) => n.id === evt.target.id());
   const list = (ids) => (ids.length ? ids.map((id) => id.split("/").pop()).join(", ") : "none");
 
   detailsEl.innerHTML = `
@@ -120,6 +129,45 @@ cy.on("tap", (evt) => {
   }
 });
 
+// Load the repo open in the current tab and draw its map
+let currentRepo = null; // "owner/repo" being shown
+
+function drawGraph(graph) {
+  if (graph !== currentGraph) {
+    // A new repo: draw everything and lay it out
+    currentGraph = graph;
+    cy.elements().remove();
+    cy.add(toElements(graph));
+    cy.layout({ name: "cose", animate: false, padding: 10 }).run();
+  } else {
+    // Same repo with new AI names: update the box labels, keep positions
+    for (const h of graph.neighborhoods) cy.getElementById("hood:" + (h.folder || h.name)).data("label", h.name);
+  }
+}
+
+async function loadRepo(url) {
+  const m = (url || "").match(/^https:\/\/github\.com\/([^/]+)\/([^/#?]+)/);
+  if (!m) {
+    detailsEl.textContent = "Open a GitHub repo to see its map.";
+    return;
+  }
+  const key = m[1] + "/" + m[2];
+  if (key === currentRepo) return; // already showing it
+  currentRepo = key;
+  try {
+    await analyzeRepo(url, {
+      useAI: false, // connections only for now; Gemma comes next
+      refresh: true,
+      onProgress: (msg) => (detailsEl.textContent = msg),
+      onUpdate: drawGraph,
+    });
+  } catch (e) {
+    currentRepo = null;
+    detailsEl.textContent = "Couldn't load this repo: " + e.message;
+  }
+}
+
+
 // "You are here": highlight the file open in the current GitHub tab
 
 // github.com/owner/repo/blob/branch/path/to/file.js -> "path/to/file.js"
@@ -139,12 +187,13 @@ function showYouAreHere(url) {
 
 async function checkActiveTab() {
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  await loadRepo(tab?.url);
   showYouAreHere(tab?.url);
 }
 
 chrome.tabs.onActivated.addListener(checkActiveTab);
 chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
-  if (info.url && tab.active) showYouAreHere(info.url);
+  if (info.url && tab.active) checkActiveTab();
 });
 checkActiveTab();
 
