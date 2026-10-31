@@ -5,58 +5,131 @@
     <title>PrimePR</title>
     <style>
       :root {
-        --bg: #0f172a; --surface: #1e293b; --border: #334155;
-        --text: #e2e8f0; --muted: #94a3b8; --accent: #f59e0b;
+        --bg: #0d1117;
+        --panel: #161b22;
+        --border: #30363d;
+        --text: #e6edf3;
+        --muted: #8b949e;
+        --accent: #f59e0b;
+        --green: #3fb950;
+        --link: #58a6ff;
       }
       * { box-sizing: border-box; }
       html, body { height: 100%; }
       body {
-        margin: 0; display: flex; flex-direction: column;
-        background: var(--bg); color: var(--text);
-        font: 13px/1.5 system-ui, sans-serif;
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font: 13px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
       }
-      header { padding: 12px 12px 4px; }
-      header h1 { margin: 0; font-size: 16px; }
-      #repo { color: var(--muted); font-size: 12px; }
-      #overview { margin: 6px 0 0; color: var(--muted); }
+
+      header { padding: 12px 14px 10px; border-bottom: 1px solid var(--border); }
+      .brand { display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 14px; }
+      .logo {
+        width: 22px; height: 22px; border-radius: 6px; display: grid; place-items: center;
+        background: linear-gradient(135deg, #f59e0b, #e4572e); color: #0d1117; font-weight: 800; font-size: 12px;
+      }
+      #repo { color: var(--muted); font-weight: 400; font-size: 12px; margin-left: auto; }
+
+      #status { margin-top: 8px; font-size: 12px; color: var(--muted); }
+      #status[hidden] { display: none; }
+      .bar { height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; margin-top: 5px; }
+      .bar > i { display: block; height: 100%; width: 30%; background: var(--accent); animation: slide 1.2s ease-in-out infinite; }
+      @keyframes slide { 0% { transform: translateX(-100%); } 100% { transform: translateX(340%); } }
+
+      #overview { padding: 10px 14px; border-bottom: 1px solid var(--border); }
       #overview:empty { display: none; }
-      #ask { display: flex; gap: 6px; padding: 8px 12px; }
+      #overview p { margin: 0 0 6px; }
+      .start {
+        display: inline-flex; align-items: center; gap: 6px; padding: 3px 9px; border-radius: 999px;
+        background: rgba(63, 185, 80, 0.12); border: 1px solid rgba(63, 185, 80, 0.4);
+        color: var(--green); font-size: 12px; cursor: pointer; text-decoration: none;
+      }
+      .start:hover { background: rgba(63, 185, 80, 0.2); }
+
+      #ask { display: flex; gap: 6px; padding: 10px 14px; }
       #question {
-        flex: 1; padding: 8px 10px; border-radius: 8px;
-        border: 1px solid var(--border); background: var(--surface); color: var(--text);
+        flex: 1; padding: 7px 10px; border-radius: 6px; border: 1px solid var(--border);
+        background: var(--panel); color: var(--text); font: inherit;
       }
-      #question:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
-      #ask button {
-        padding: 8px 14px; border: 0; border-radius: 8px;
-        background: var(--accent); color: #111827; font-weight: 600; cursor: pointer;
+      #question:focus { outline: none; border-color: var(--link); }
+      button {
+        padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border);
+        background: #21262d; color: var(--text); font: inherit; font-weight: 500; cursor: pointer;
       }
-      #legend { display: flex; flex-wrap: wrap; gap: 4px 10px; padding: 0 12px 4px; font-size: 11px; color: var(--muted); }
-      #legend i { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px; }
-      #map { flex: 1; min-height: 0; }
+      button:hover:not(:disabled) { border-color: var(--muted); }
+      button.primary { background: #238636; border-color: #2ea043; }
+      button:disabled { opacity: 0.6; cursor: default; }
+
+      #map-wrap { position: relative; flex: 1 1 auto; min-height: 220px; overflow: hidden; }
+      #map { position: absolute; inset: 0; }
+      #legend {
+        position: absolute; left: 10px; bottom: 8px; display: flex; flex-wrap: wrap; gap: 4px 10px;
+        font-size: 11px; color: var(--muted); pointer-events: none;
+      }
+      #legend span::before {
+        content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+        margin-right: 4px; background: var(--c);
+      }
+      #fit { position: absolute; right: 10px; bottom: 8px; padding: 3px 8px; font-size: 11px; }
+
       #details {
-        max-height: 35vh; overflow-y: auto; padding: 12px;
-        background: var(--surface); border-top: 1px solid var(--border);
+        flex: 0 1 auto; max-height: 38vh; overflow-y: auto; padding: 12px 14px 16px;
+        border-top: 1px solid var(--border); background: var(--panel);
       }
-      #details p { margin: 6px 0; }
-      #details ol { padding-left: 20px; margin: 6px 0; }
-      #details li { margin-bottom: 4px; }
+      #details .hint { color: var(--muted); }
+      .file-title { font-weight: 600; font-size: 14px; word-break: break-all; }
+      .role {
+        display: inline-block; margin-left: 6px; padding: 0 7px; border-radius: 999px; font-size: 11px;
+        font-weight: 500; color: #0d1117; background: var(--c, #888); vertical-align: 1px;
+      }
+      .summary { margin: 8px 0; }
+      .links { display: grid; grid-template-columns: auto 1fr; gap: 2px 8px; font-size: 12px; margin-bottom: 10px; }
+      .links b { color: var(--muted); font-weight: 500; }
+      .chip { color: var(--link); cursor: pointer; }
+      .chip:hover { text-decoration: underline; }
+      #details h4 { margin: 12px 0 4px; font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+      #details ul, #details ol { margin: 0; padding-left: 18px; }
+      #details li { margin: 3px 0; }
+      .loading { color: var(--muted); font-style: italic; }
+      .loading::after { content: "…"; animation: dots 1.2s steps(3) infinite; }
+      @keyframes dots { 0% { content: "."; } 33% { content: ".."; } 66% { content: "..."; } }
+      .error { color: #f85149; }
+      /* Shimmering status words while Gemma gets ready */
+      .thinking {
+        display: inline-block; font-style: italic;
+        background: linear-gradient(90deg, #6e7681 0%, #e6edf3 45%, #6e7681 90%);
+        background-size: 220% 100%; -webkit-background-clip: text; background-clip: text; color: transparent;
+        animation: shimmer 1.6s linear infinite;
+      }
+      .thinking::before { content: "✦ "; color: var(--accent); -webkit-text-fill-color: var(--accent); }
+      .thinking::after { content: "…"; }
+      @keyframes shimmer { 0% { background-position: 120% 0; } 100% { background-position: -120% 0; } }
+      /* Blinking cursor while words stream in */
+      .cursor { display: inline-block; width: 7px; height: 14px; margin-left: 2px; vertical-align: -2px; background: var(--accent); animation: blink 0.9s steps(1) infinite; }
+      @keyframes blink { 50% { opacity: 0; } }
     </style>
   </head>
   <body>
     <header>
-      <h1>PrimePR</h1>
-      <div id="repo">Open a GitHub repo to see its map</div>
-      <p id="overview"></p>
+      <div class="brand"><div class="logo">P</div>PrimePR <span id="repo"></span></div>
+      <div id="status"><span id="status-text">Starting</span><div class="bar"><i></i></div></div>
     </header>
+    <div id="overview"></div>
     <form id="ask">
-      <input id="question" placeholder="How does login work?" />
-      <button>Trace</button>
+      <input id="question" placeholder="Ask: how does login work?" autocomplete="off" />
+      <button class="primary">Trace</button>
     </form>
-    <div id="legend"></div>
-    <div id="map"></div>
-    <div id="details">Click a file to see what it does.</div>
+    <div id="map-wrap">
+      <div id="map"></div>
+      <div id="legend"></div>
+      <button id="fit" type="button" title="Fit the whole map">⤢ Fit</button>
+    </div>
+    <div id="details"><span class="hint">Click a dot to see what that file does.</span></div>
     <script src="lib/cytoscape.min.js"></script>
     <script type="module" src="sidepanel.js"></script>
   </body>
 </html>
-

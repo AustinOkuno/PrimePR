@@ -2,9 +2,9 @@
   "nodes": [
     {
       "id": "src/flask/__init__.py",
-      "group": "flask",
+      "group": "Core Framework",
       "role": "logic",
-      "summary": "",
+      "summary": "This file imports all the necessary parts for the Flask micro framework.",
       "importance": 6,
       "imports": [
         "src/flask/json/__init__.py",
@@ -24,24 +24,26 @@
         "src/flask/ctx.py",
         "src/flask/helpers.py",
         "src/flask/sansio/app.py"
-      ]
+      ],
+      "keyItems": []
     },
     {
       "id": "src/flask/__main__.py",
-      "group": "flask",
+      "group": "Core Framework",
       "role": "entry",
-      "summary": "",
+      "summary": "This file starts the application by calling the main function from the cli module.",
       "importance": 6,
       "imports": [
         "src/flask/cli.py"
       ],
-      "importedBy": []
+      "importedBy": [],
+      "keyItems": []
     },
     {
       "id": "src/flask/app.py",
-      "group": "flask",
+      "group": "Core Framework",
       "role": "entry",
-      "summary": "",
+      "summary": "This file defines the main Flask object and its methods for a web application.",
       "importance": 7,
       "imports": [
         "src/flask/cli.py",
@@ -65,11 +67,12 @@
         "src/flask/globals.py",
         "src/flask/sessions.py",
         "src/flask/testing.py"
-      ]
+      ],
+      "keyItems": []
     },
     {
       "id": "src/flask/blueprints.py",
-      "group": "flask",
+      "group": "Core Framework",
       "role": "logic",
       "summary": "",
       "importance": 3,
@@ -88,9 +91,9 @@
     },
     {
       "id": "src/flask/cli.py",
-      "group": "flask",
+      "group": "Core Framework",
       "role": "entry",
-      "summary": "",
+      "summary": "This file contains tools for finding and loading Flask applications.",
       "importance": 6,
       "imports": [
         "src/flask/globals.py",
@@ -103,11 +106,12 @@
         "src/flask/app.py",
         "src/flask/blueprints.py",
         "src/flask/testing.py"
-      ]
+      ],
+      "keyItems": []
     },
     {
       "id": "src/flask/config.py",
-      "group": "flask",
+      "group": "Core Framework",
       "role": "config",
       "summary": "",
       "importance": 2,
@@ -121,7 +125,7 @@
     },
     {
       "id": "src/flask/ctx.py",
-      "group": "flask",
+      "group": "Core Framework",
       "role": "logic",
       "summary": "",
       "importance": 5,
@@ -145,7 +149,7 @@
     },
     {
       "id": "src/flask/debughelpers.py",
-      "group": "flask",
+      "group": "Core Framework",
       "role": "util",
       "summary": "",
       "importance": 3,
@@ -164,9 +168,9 @@
     },
     {
       "id": "src/flask/globals.py",
-      "group": "flask",
+      "group": "Core Framework",
       "role": "logic",
-      "summary": "",
+      "summary": "This file defines proxy classes to manage different parts of the Flask application.",
       "importance": 10,
       "imports": [
         "src/flask/app.py",
@@ -187,13 +191,14 @@
         "src/flask/views.py",
         "src/flask/wrappers.py",
         "src/flask/json/__init__.py"
-      ]
+      ],
+      "keyItems": []
     },
     {
       "id": "src/flask/helpers.py",
-      "group": "flask",
+      "group": "Core Framework",
       "role": "util",
-      "summary": "",
+      "summary": "This file contains helper functions for the Flask web framework.",
       "importance": 8,
       "imports": [
         "src/flask/globals.py",
@@ -211,11 +216,12 @@
         "src/flask/wrappers.py",
         "src/flask/sansio/app.py",
         "src/flask/sansio/scaffold.py"
-      ]
+      ],
+      "keyItems": []
     },
     {
       "id": "src/flask/logging.py",
-      "group": "flask",
+      "group": "Core Framework",
       "role": "logic",
       "summary": "",
       "importance": 1,
@@ -229,7 +235,7 @@
     },
     {
       "id": "src/flask/sessions.py",
-      "group": "flask",
+      "group": "Core Framework",
       "role": "logic",
       "summary": "",
       "importance": 4,
@@ -247,7 +253,7 @@
     },
     {
       "id": "src/flask/signals.py",
-      "group": "flask",
+      "group": "Core Framework",
       "role": "logic",
       "summary": "",
       "importance": 4,
@@ -262,7 +268,7 @@
     },
     {
       "id": "src/flask/templating.py",
-      "group": "flask",
+      "group": "Core Framework",
       "role": "logic",
       "summary": "",
       "importance": 4,
@@ -284,7 +290,7 @@
     },
     {
       "id": "src/flask/testing.py",
-      "group": "flask",
+      "group": "Core Framework",
       "role": "logic",
       "summary": "",
       "importance": 2,
@@ -300,7 +306,7 @@
     },
     {
       "id": "src/flask/typing.py",
-      "group": "flask",
+      "group": "Core Framework",
       "role": "logic",
       "summary": "",
       "importance": 5,
@@ -316,7 +322,7 @@
     },
     {
       "id": "src/flask/views.py",
-      "group": "flask",
+      "group": "Core Framework",
       "role": "logic",
       "summary": "",
       "importance": 1,
@@ -328,9 +334,9 @@
     },
     {
       "id": "src/flask/wrappers.py",
-      "group": "flask",
+      "group": "Core Framework",
       "role": "logic",
-      "summary": "",
+      "summary": "This file defines the Request object used in Flask to handle incoming web requests.",
       "importance": 8,
       "imports": [
         "src/flask/json/__init__.py",
@@ -348,11 +354,12 @@
         "src/flask/helpers.py",
         "src/flask/sessions.py",
         "src/flask/json/__init__.py"
-      ]
+      ],
+      "keyItems": []
     },
     {
       "id": "src/flask/json/__init__.py",
-      "group": "flask/json",
+      "group": "JSON Handling",
       "role": "logic",
       "summary": "",
       "importance": 3,
@@ -369,7 +376,7 @@
     },
     {
       "id": "src/flask/json/provider.py",
-      "group": "flask/json",
+      "group": "JSON Handling",
       "role": "logic",
       "summary": "",
       "importance": 2,
@@ -383,7 +390,7 @@
     },
     {
       "id": "src/flask/json/tag.py",
-      "group": "flask/json",
+      "group": "JSON Handling",
       "role": "logic",
       "summary": "",
       "importance": 1,
@@ -396,9 +403,9 @@
     },
     {
       "id": "src/flask/sansio/app.py",
-      "group": "flask/sansio",
+      "group": "Application Structure",
       "role": "logic",
-      "summary": "",
+      "summary": "This file defines the main Flask application class and its methods.",
       "importance": 8,
       "imports": [
         "src/flask/typing.py",
@@ -421,11 +428,12 @@
         "src/flask/templating.py",
         "src/flask/json/provider.py",
         "src/flask/sansio/blueprints.py"
-      ]
+      ],
+      "keyItems": []
     },
     {
       "id": "src/flask/sansio/blueprints.py",
-      "group": "flask/sansio",
+      "group": "Application Structure",
       "role": "logic",
       "summary": "",
       "importance": 2,
@@ -441,7 +449,7 @@
     },
     {
       "id": "src/flask/sansio/scaffold.py",
-      "group": "flask/sansio",
+      "group": "Application Structure",
       "role": "logic",
       "summary": "",
       "importance": 4,
@@ -859,8 +867,8 @@
   ],
   "neighborhoods": [
     {
-      "name": "flask",
-      "summary": "",
+      "name": "Core Framework",
+      "summary": "This folder contains the main files that make up the Flask web framework.",
       "files": [
         "src/flask/__init__.py",
         "src/flask/__main__.py",
@@ -880,25 +888,28 @@
         "src/flask/typing.py",
         "src/flask/views.py",
         "src/flask/wrappers.py"
-      ]
+      ],
+      "folder": "flask"
     },
     {
-      "name": "flask/json",
-      "summary": "",
+      "name": "JSON Handling",
+      "summary": "This part handles things related to working with JSON data in your web app.",
       "files": [
         "src/flask/json/__init__.py",
         "src/flask/json/provider.py",
         "src/flask/json/tag.py"
-      ]
+      ],
+      "folder": "flask/json"
     },
     {
-      "name": "flask/sansio",
-      "summary": "",
+      "name": "Application Structure",
+      "summary": "This folder deals with the main application class and how applications are structured.",
       "files": [
         "src/flask/sansio/app.py",
         "src/flask/sansio/blueprints.py",
         "src/flask/sansio/scaffold.py"
-      ]
+      ],
+      "folder": "flask/sansio"
     }
   ],
   "repo": {
@@ -910,6 +921,6 @@
     "url": "https://github.com/pallets/flask",
     "totalFiles": 236
   },
-  "overview": "",
-  "startHere": ""
+  "overview": "This project is a small Python framework called Flask. It helps you build web applications easily. It is lightweight and lets you start building web apps quickly.",
+  "startHere": "src/flask/app.py"
 }
