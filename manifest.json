@@ -1,0 +1,16 @@
+{
+  "manifest_version": 3,
+  "name": "PrimePR",
+  "version": "0.1.0",
+  "description": "A map of any GitHub repo, right in your side panel.",
+  "permissions": ["sidePanel", "tabs", "storage"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
+  "action": {
+    "default_title": "Open PrimePR"
+  }
+}
