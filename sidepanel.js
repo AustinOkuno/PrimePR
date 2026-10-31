@@ -79,9 +79,40 @@ const cy = cytoscape({
       },
     },
         { selector: "edge.glue", style: { opacity: 0, events: "no" } },
+            { selector: ".faded", style: { opacity: 0.15 } },
+
   ],
   layout: { name: "preset" },
 });
 
 requestAnimationFrame(() => cy.layout({ name: "cose", animate: false, padding: 10 }).run());
 window.addEventListener("resize", () => cy.resize().fit(undefined, 10));
+
+// Show a file's details when it's clicked
+const detailsEl = document.getElementById("details");
+
+cy.on("tap", "node[role]", (evt) => {
+  const file = getGraph().nodes.find((n) => n.id === evt.target.id());
+  const list = (ids) => (ids.length ? ids.map((id) => id.split("/").pop()).join(", ") : "none");
+
+  detailsEl.innerHTML = `
+    <strong>${file.id}</strong> <em>(${file.role})</em>
+    <p>${file.summary || "No summary yet."}</p>
+    <p><b>Uses:</b> ${list(file.imports)}</p>
+    <p><b>Used by:</b> ${list(file.importedBy)}</p>
+  `;
+
+  // Fade everything except this file and its direct connections
+  cy.elements().addClass("faded");
+  evt.target.closedNeighborhood().removeClass("faded");
+  evt.target.ancestors().removeClass("faded");
+});
+
+// Tap empty space to clear
+cy.on("tap", (evt) => {
+  if (evt.target === cy) {
+    cy.elements().removeClass("faded");
+    detailsEl.textContent = "Click a file to see what it does.";
+  }
+});
+
