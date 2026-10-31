@@ -78,9 +78,12 @@ const cy = cytoscape({
         "curve-style": "bezier",
       },
     },
-        { selector: "edge.glue", style: { opacity: 0, events: "no" } },
-            { selector: ".faded", style: { opacity: 0.15 } },
-                { selector: ".here", style: { "border-width": 4, "border-color": "#111827" } },
+        { selector: ".faded", style: { opacity: 0.15 } },
+            { selector: ".here", style: { "border-width": 4, "border-color": "#111827" } },
+                { selector: "node.traced", style: { "border-width": 4, "border-color": "#f59e0b" } },
+                    { selector: "edge.traced", style: { width: 3, "line-color": "#f59e0b", "target-arrow-color": "#f59e0b" } },
+                        { selector: "edge.glue", style: { opacity: 0, events: "no" } },
+
 
   ],
   layout: { name: "preset" },
@@ -112,7 +115,7 @@ cy.on("tap", "node[role]", (evt) => {
 // Tap empty space to clear
 cy.on("tap", (evt) => {
   if (evt.target === cy) {
-    cy.elements().removeClass("faded");
+        cy.elements().removeClass("faded traced");
     detailsEl.textContent = "Click a file to see what it does.";
   }
 });
@@ -144,5 +147,35 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
   if (info.url && tab.active) showYouAreHere(info.url);
 });
 checkActiveTab();
+
+
+// Feature tracing: light up each step's file in order
+let traceRun = 0;
+
+async function playTrace(trace) {
+  const run = ++traceRun;
+  cy.elements().removeClass("traced here").addClass("faded");
+  detailsEl.innerHTML = `<p>${trace.answer}</p><ol id="trace-steps"></ol>`;
+  const stepsEl = document.getElementById("trace-steps");
+
+  let prev = null;
+  for (const step of trace.steps) {
+    if (run !== traceRun) return; // a newer trace started
+    const node = cy.getElementById(step.file);
+    node.removeClass("faded").addClass("traced");
+    node.ancestors().removeClass("faded");
+    if (prev) prev.edgesTo(node).not(".glue").removeClass("faded").addClass("traced");
+    stepsEl.insertAdjacentHTML("beforeend", `<li><b>${step.file.split("/").pop()}</b>: ${step.note}</li>`);
+    prev = node;
+    await new Promise((r) => setTimeout(r, 600));
+  }
+}
+
+document.getElementById("ask").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const question = document.getElementById("question").value.trim();
+  if (question) playTrace(await traceFeature(null, null, question));
+});
+
 
 
