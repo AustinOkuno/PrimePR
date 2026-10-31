@@ -3,7 +3,15 @@
   "name": "PrimePR",
   "version": "0.1.0",
   "description": "A map of any GitHub repo, right in your side panel.",
-  "permissions": ["sidePanel", "tabs", "storage"],
+  "permissions": ["sidePanel", "tabs", "storage", "unlimitedStorage"],
+  "host_permissions": [
+    "https://github.com/*",
+    "https://api.github.com/*",
+    "https://raw.githubusercontent.com/*",
+    "http://localhost:11434/*",
+    "http://127.0.0.1:11434/*",
+    "https://generativelanguage.googleapis.com/*"
+  ],
   "background": {
     "service_worker": "background.js"
   },
