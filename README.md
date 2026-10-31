@@ -131,7 +131,7 @@ Everything in this repo was written during the hacking window (10:45 AM to 4:00 
 
 **Existing tools we used:** [Gemma 4](https://ai.google.dev/gemma) (Google DeepMind), [Ollama](https://ollama.com), [Cytoscape.js](https://js.cytoscape.org), the GitHub REST API.
 
-**AI coding tools used:** Claude (Anthropic). TODO: add any others you used.
+**AI coding tools used:** Claude (Anthropic).
 
 ## Team
 
