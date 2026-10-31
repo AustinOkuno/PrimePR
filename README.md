@@ -85,19 +85,6 @@ Speed on a laptop CPU, which is how most students will run it:
 node test/run.mjs https://github.com/pallets/flask --ai --ask "how does a request get handled?"
 ```
 
-## Did it work? (results)
-
-<!-- TODO: fill in after testing with people outside the team -->
-We asked testers who had never seen the project: **"Which file would you change to fix ___?"**, first using GitHub alone, then using NodeMap.
-
-| Tester | Without NodeMap | With NodeMap | Found the right file? |
-|---|---|---|---|
-| 1 | TODO | TODO | TODO |
-| 2 | TODO | TODO | TODO |
-| 3 | TODO | TODO | TODO |
-
-What testers said: TODO
-
 ## Run it at your club or class
 
 NodeMap works on **any public GitHub repository**, so any club, class or open source project can use it:
@@ -150,7 +137,7 @@ Everything in this repo was written during the hacking window (10:45 AM to 4:00 
 
 | Name | Role | GitHub | LinkedIn |
 |---|---|---|---|
-| Austin Okuno | Analysis engine, Gemma integration | [@AustinOkuno](https://github.com/AustinOkuno) | [LinkedIn](https://linkedin.com/in/TODO) |
+| Austin Okuno | Analysis engine, Gemma integration | [@AustinOkuno](https://github.com/AustinOkuno) | [LinkedIn](https://www.linkedin.com/in/austin-okuno-557922431/) |
 | Naomi Teklemichael | Chrome extension, map UI | [@NaomiTeklemichael](https://github.com/naoml05) | [LinkedIn](https://linkedin.com/in/naomiteklemichael) |
 
 ## License
