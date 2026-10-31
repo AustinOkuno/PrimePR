@@ -4,22 +4,59 @@
     <meta charset="utf-8" />
     <title>PrimePR</title>
     <style>
-      body{margin:0; font-family: system-ui, sans-serif;}
-      #map{width: 100%; height: 70vh;}
-      #details{ padding: 12px; font-size: 13px; border-top: 1px solid #e5e7eb}
-      #ask {display: flex; gap: 6px; padding: 8px;}
-      #question {flex: 1; padding: 6px;}
+      :root {
+        --bg: #0f172a; --surface: #1e293b; --border: #334155;
+        --text: #e2e8f0; --muted: #94a3b8; --accent: #f59e0b;
+      }
+      * { box-sizing: border-box; }
+      html, body { height: 100%; }
+      body {
+        margin: 0; display: flex; flex-direction: column;
+        background: var(--bg); color: var(--text);
+        font: 13px/1.5 system-ui, sans-serif;
+      }
+      header { padding: 12px 12px 4px; }
+      header h1 { margin: 0; font-size: 16px; }
+      #repo { color: var(--muted); font-size: 12px; }
+      #overview { margin: 6px 0 0; color: var(--muted); }
+      #overview:empty { display: none; }
+      #ask { display: flex; gap: 6px; padding: 8px 12px; }
+      #question {
+        flex: 1; padding: 8px 10px; border-radius: 8px;
+        border: 1px solid var(--border); background: var(--surface); color: var(--text);
+      }
+      #question:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+      #ask button {
+        padding: 8px 14px; border: 0; border-radius: 8px;
+        background: var(--accent); color: #111827; font-weight: 600; cursor: pointer;
+      }
+      #legend { display: flex; flex-wrap: wrap; gap: 4px 10px; padding: 0 12px 4px; font-size: 11px; color: var(--muted); }
+      #legend i { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px; }
+      #map { flex: 1; min-height: 0; }
+      #details {
+        max-height: 35vh; overflow-y: auto; padding: 12px;
+        background: var(--surface); border-top: 1px solid var(--border);
+      }
+      #details p { margin: 6px 0; }
+      #details ol { padding-left: 20px; margin: 6px 0; }
+      #details li { margin-bottom: 4px; }
     </style>
   </head>
   <body>
+    <header>
+      <h1>PrimePR</h1>
+      <div id="repo">Open a GitHub repo to see its map</div>
+      <p id="overview"></p>
+    </header>
     <form id="ask">
       <input id="question" placeholder="How does login work?" />
       <button>Trace</button>
     </form>
-    <div id = "map"></div>
-    <div id="details"> Click a file to see what it does</div>
+    <div id="legend"></div>
+    <div id="map"></div>
+    <div id="details">Click a file to see what it does.</div>
     <script src="lib/cytoscape.min.js"></script>
     <script type="module" src="sidepanel.js"></script>
-
   </body>
 </html>
+

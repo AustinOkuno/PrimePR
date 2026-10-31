@@ -14,6 +14,12 @@ const ROLE_COLORS = {
   test: "#c9c9c9",
 };
 
+document.getElementById("legend").innerHTML = Object.entries(ROLE_COLORS)
+  .filter(([role]) => role !== "test")
+  .map(([role, color]) => `<span><i style="background:${color}"></i>${role}</span>`)
+  .join("");
+
+
 // Turn the graph from getGraph() into Cytoscape's format
 function toElements(graph) {
       // Box ids use the folder, which never changes; Gemma renames the label later
@@ -51,8 +57,8 @@ function toElements(graph) {
 const cy = cytoscape({
   container: document.getElementById("map"),
   elements: [],
-  style: [
-    { selector: "node", style: { label: "data(label)", "font-size": 8 } },
+    style: [
+    { selector: "node", style: { label: "data(label)", "font-size": 8, color: "#cbd5e1" } },
     {
       selector: "node[role]",
       style: {
@@ -67,12 +73,13 @@ const cy = cytoscape({
       selector: ":parent",
       style: {
         shape: "round-rectangle",
-        "background-color": "#f3f4f6",
-        "border-color": "#d1d5db",
+        "background-color": "#1e293b",
+        "border-color": "#334155",
         "border-width": 1,
         "text-valign": "top",
         "font-size": 10,
         "font-weight": "bold",
+        color: "#e2e8f0",
         padding: 10,
       },
     },
@@ -80,20 +87,18 @@ const cy = cytoscape({
       selector: "edge",
       style: {
         width: 1,
-        "line-color": "#cbd5e1",
+        "line-color": "#475569",
         "target-arrow-shape": "triangle",
-        "target-arrow-color": "#cbd5e1",
+        "target-arrow-color": "#475569",
         "arrow-scale": 0.6,
         "curve-style": "bezier",
       },
     },
-        { selector: ".faded", style: { opacity: 0.15 } },
-            { selector: ".here", style: { "border-width": 4, "border-color": "#111827" } },
-                { selector: "node.traced", style: { "border-width": 4, "border-color": "#f59e0b" } },
-                    { selector: "edge.traced", style: { width: 3, "line-color": "#f59e0b", "target-arrow-color": "#f59e0b" } },
-                        { selector: "edge.glue", style: { opacity: 0, events: "no" } },
-
-
+    { selector: ".faded", style: { opacity: 0.15 } },
+    { selector: ".here", style: { "border-width": 4, "border-color": "#f8fafc" } },
+    { selector: "node.traced", style: { "border-width": 4, "border-color": "#f59e0b" } },
+    { selector: "edge.traced", style: { width: 3, "line-color": "#f59e0b", "target-arrow-color": "#f59e0b" } },
+    { selector: "edge.glue", style: { opacity: 0, events: "no" } },
   ],
   layout: { name: "preset" },
 });
@@ -133,6 +138,9 @@ cy.on("tap", (evt) => {
 let currentRepo = null; // "owner/repo" being shown
 
 function drawGraph(graph) {
+  document.getElementById("repo").textContent = graph.repo.owner + "/" + graph.repo.repo;
+  document.getElementById("overview").textContent = graph.overview || "";
+
   if (graph !== currentGraph) {
     // A new repo: draw everything and lay it out
     currentGraph = graph;
@@ -156,8 +164,6 @@ async function loadRepo(url) {
   currentRepo = key;
   try {
     await analyzeRepo(url, {
-      useAI: false, // connections only for now; Gemma comes next
-      refresh: true,
       onProgress: (msg) => (detailsEl.textContent = msg),
       onUpdate: drawGraph,
     });
@@ -223,8 +229,17 @@ async function playTrace(trace) {
 document.getElementById("ask").addEventListener("submit", async (e) => {
   e.preventDefault();
   const question = document.getElementById("question").value.trim();
-  if (question) playTrace(await traceFeature(null, null, question));
+  if (!question || !currentGraph) return;
+  detailsEl.textContent = "Gemma is tracing that…";
+  try {
+    const out = await askHowItWorks(currentGraph, question);
+    // Person A's format is { answer, path: [{ file, step }] }; playTrace uses steps/note
+    playTrace({ answer: out.answer, steps: (out.path || []).map((s) => ({ file: s.file, note: s.step })) });
+  } catch (err) {
+    detailsEl.textContent = "Couldn't reach Gemma: " + err.message;
+  }
 });
+
 
 
 

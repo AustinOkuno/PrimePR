@@ -3,6 +3,7 @@
   "name": "PrimePR",
   "version": "0.1.0",
   "description": "A map of any GitHub repo, right in your side panel.",
+    "icons": { "16": "icons/icon16.png", "32": "icons/icon32.png", "48": "icons/icon48.png", "128": "icons/icon128.png" },
   "permissions": ["sidePanel", "tabs", "storage"],
     "host_permissions": ["https://api.github.com/*", "https://raw.githubusercontent.com/*", "http://localhost:11434/*"],
   "background": {
@@ -11,7 +12,9 @@
   "side_panel": {
     "default_path": "sidepanel.html"
   },
-  "action": {
-    "default_title": "Open PrimePR"
+    "action": {
+    "default_title": "Open PrimePR",
+    "default_icon": { "16": "icons/icon16.png", "32": "icons/icon32.png" }
   }
+
 }
