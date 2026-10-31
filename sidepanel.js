@@ -80,6 +80,7 @@ const cy = cytoscape({
     },
         { selector: "edge.glue", style: { opacity: 0, events: "no" } },
             { selector: ".faded", style: { opacity: 0.15 } },
+                { selector: ".here", style: { "border-width": 4, "border-color": "#111827" } },
 
   ],
   layout: { name: "preset" },
@@ -115,4 +116,33 @@ cy.on("tap", (evt) => {
     detailsEl.textContent = "Click a file to see what it does.";
   }
 });
+
+// "You are here": highlight the file open in the current GitHub tab
+
+// github.com/owner/repo/blob/branch/path/to/file.js -> "path/to/file.js"
+function filePathFromUrl(url) {
+  const m = (url || "").match(/^https:\/\/github\.com\/[^/]+\/[^/]+\/blob\/[^/]+\/([^?#]+)/);
+  return m ? decodeURIComponent(m[1]) : null;
+}
+
+function showYouAreHere(url) {
+  cy.nodes().removeClass("here");
+  const node = cy.getElementById(filePathFromUrl(url) || "");
+  if (node.nonempty()) {
+    node.addClass("here");
+    node.emit("tap"); // reuse the click handler to show details
+  }
+}
+
+async function checkActiveTab() {
+  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  showYouAreHere(tab?.url);
+}
+
+chrome.tabs.onActivated.addListener(checkActiveTab);
+chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
+  if (info.url && tab.active) showYouAreHere(info.url);
+});
+checkActiveTab();
+
 
