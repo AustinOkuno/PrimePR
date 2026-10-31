@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "PrimePR",
+  "name": "NodeMap",
   "version": "0.1.0",
-  "description": "A map of any GitHub repo, right in your side panel.",
+  "description": "See how any GitHub repo connects: an interactive map of its files, explained by Gemma 4.",
   "permissions": ["sidePanel", "tabs", "storage", "unlimitedStorage"],
   "host_permissions": [
     "https://github.com/*",
@@ -19,6 +19,6 @@
     "default_path": "sidepanel.html"
   },
   "action": {
-    "default_title": "Open PrimePR"
+    "default_title": "Open NodeMap"
   }
 }

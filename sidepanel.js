@@ -98,7 +98,6 @@ const cy = cytoscape({
   elements: [],
   minZoom: 0.3,
   maxZoom: 3,
-  wheelSensitivity: 0.3,
   style: [
     {
       selector: "node",
