@@ -151,7 +151,7 @@ Everything in this repo was written during the hacking window (10:45 AM to 4:00 
 | Name | Role | GitHub | LinkedIn |
 |---|---|---|---|
 | Austin Okuno | Analysis engine, Gemma integration | [@AustinOkuno](https://github.com/AustinOkuno) | [LinkedIn](https://linkedin.com/in/TODO) |
-| TODO | Chrome extension, map UI | [@TODO](https://github.com/TODO) | [LinkedIn](https://linkedin.com/in/TODO) |
+| Naomi Teklemichael | Chrome extension, map UI | [@NaomiTeklemichael](https://github.com/naoml05) | [LinkedIn](https://linkedin.com/in/naomiteklemichael) |
 
 ## License
 
